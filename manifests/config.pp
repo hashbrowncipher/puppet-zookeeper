@@ -43,6 +43,9 @@ class zookeeper::config(
   $rollingfile_threshold = 'ERROR',
   $tracefile_threshold   = 'TRACE',
   $max_allowed_connections = 10,
+  $tick_time = 2000,
+  $init_limit = 10,
+  $sync_limit = 5,
 ) {
   require zookeeper::install
 
