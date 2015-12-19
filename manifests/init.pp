@@ -39,6 +39,9 @@ class zookeeper(
   $rollingfile_threshold = 'ERROR',
   $tracefile_threshold    = 'TRACE',
   $max_allowed_connections = 10,
+  $tick_time = 2000,
+  $init_limit = 10,
+  $sync_limit = 5,
 ) {
 
   anchor { 'zookeeper::start': }->
@@ -69,6 +72,9 @@ class zookeeper(
     rollingfile_threshold   => $rollingfile_threshold,
     tracefile_threshold     => $tracefile_threshold,
     max_allowed_connections => $max_allowed_connections,
+    tick_time               => $tick_time,
+    init_limit              => $init_limit,
+    sync_limit              => $sync_limit,
   }->
   class { 'zookeeper::service':
     cfg_dir => $cfg_dir,

@@ -1,13 +1,13 @@
 # http://hadoop.apache.org/zookeeper/docs/current/zookeeperAdmin.html
 
 # The number of milliseconds of each tick
-tickTime=2000
+tickTime=<%= scope.lookupvar('zookeeper::config::tick_time') %>
 # The number of ticks that the initial
 # synchronization phase can take
-initLimit=10
+initLimit=<%= scope.lookupvar('zookeeper::config::init_limit') %>
 # The number of ticks that can pass between
 # sending a request and getting an acknowledgement
-syncLimit=5
+syncLimit=<%= scope.lookupvar('zookeeper::config::sync_limit') %>
 # the directory where the snapshot is stored.
 dataDir=<%= scope.lookupvar('zookeeper::config::datastore') %>
 # Place the dataLogDir to a separate physical disc for better performance
