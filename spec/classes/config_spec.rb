@@ -77,6 +77,19 @@ describe 'zookeeper::config' do
     }
   end
 
+  context 'log4j file' do
+    let(:params) { {
+      :log4j_file    => "/nail/etc/zookeeper/log4j.properties",
+    } }
+
+    it do
+      should contain_file('/etc/zookeeper/conf/log4j.properties').with(
+          'ensure' => 'link',
+          'target' => log4j_file,
+      )
+    end
+  end
+
   context 'max allowed connections' do
     max_conn = 15
 

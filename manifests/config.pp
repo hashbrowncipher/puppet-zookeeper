@@ -12,6 +12,12 @@
 #     server.2=zookeeper2:2888:3888
 #     server.3=zookeeper3:2888:3888
 #
+# [* log4j_file *] Set to undef by default, if not full path to log4j
+# properties file is required, that will be the target of symlink from
+# $cfg_dir/log4j.properties. This file needs to be present and deployed
+# beforehand. This is useful when one wants to template and deploy their
+# own log4j properties for zookeeper logging.
+#
 #
 # Actions: None
 #
@@ -46,8 +52,16 @@ class zookeeper::config(
   $tick_time = 2000,
   $init_limit = 10,
   $sync_limit = 5,
+  $log4j_file = undef,
 ) {
   require zookeeper::install
+
+  if $log4j_file {
+    validate_absolute_path($log4j_file)
+    if $log4j_file == "${cfg_dir}/log4j.properties" {
+        fail('log4j_file should not be same as ' + "${cfg_dir}/log4j.properties")
+    }
+  }
 
   file { $cfg_dir:
     ensure  => directory,
@@ -99,12 +113,24 @@ class zookeeper::config(
     notify  => Class['zookeeper::service'],
   }
 
-  file { "${cfg_dir}/log4j.properties":
-    owner   => $user,
-    group   => $group,
-    mode    => '0644',
-    content => template('zookeeper/conf/log4j.properties.erb'),
-    notify  => Class['zookeeper::service'],
+  if $log4j_file {
+    file { "${cfg_dir}/log4j.properties":
+        ensure  => 'link',
+        owner   => $user,
+        group   => $group,
+        mode    => '0644',
+        target  => $log4j_file,
+        require => File[$log4j_file],
+        notify  => Class['zookeeper::service'],
+    }
+  } else {
+    file { "${cfg_dir}/log4j.properties":
+        owner   => $user,
+        group   => $group,
+        mode    => '0644',
+        content => template('zookeeper/conf/log4j.properties.erb'),
+        notify  => Class['zookeeper::service'],
+    }
   }
 
 }
