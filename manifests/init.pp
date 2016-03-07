@@ -36,6 +36,7 @@ class zookeeper(
   # interval in hours, purging enabled when >= 1
   $purge_interval   = 0,
   # log4j properties
+  $log4j_file   = undef,
   $rollingfile_threshold = 'ERROR',
   $tracefile_threshold    = 'TRACE',
   $max_allowed_connections = 10,
@@ -75,6 +76,7 @@ class zookeeper(
     tick_time               => $tick_time,
     init_limit              => $init_limit,
     sync_limit              => $sync_limit,
+    log4j_file              => $log4j_file,
   }->
   class { 'zookeeper::service':
     cfg_dir => $cfg_dir,
