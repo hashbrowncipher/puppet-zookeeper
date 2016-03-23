@@ -24,6 +24,7 @@ class zookeeper::config(
   $datastore               = '/var/lib/zookeeper',
   $datalogstore            = undef,
   $initialize_datastore    = false,
+  $client_port             = 2181,
   $election_port           = 2888,
   $leader_port             = 3888,
   $snap_count              = 10000,

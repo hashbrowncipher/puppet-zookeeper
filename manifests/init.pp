@@ -18,9 +18,9 @@ class zookeeper(
   # datalogstore used to put transaction logs in separate location than snapshots
   $datalogstore            = undef,
   $initialize_datastore    = false,
-  # fact from which we get public ip address
-  $election_port           = 2888,
-  $leader_port             = 3888,
+  $client_port             = undef,
+  $election_port           = undef,
+  $leader_port             = undef,
   $log_dir                 = '/var/log/zookeeper',
   $cfg_dir                 = '/etc/zookeeper/conf',
   $user                    = 'zookeeper',
@@ -78,6 +78,7 @@ class zookeeper(
     datastore               => $datastore,
     datalogstore            => $datalogstore,
     initialize_datastore    => $initialize_datastore,
+    client_port             => $client_port,
     election_port           => $election_port,
     leader_port             => $leader_port,
     log_dir                 => $log_dir,
