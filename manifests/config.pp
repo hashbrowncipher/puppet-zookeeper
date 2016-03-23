@@ -130,14 +130,6 @@ class zookeeper::config(
     notify  => Class['zookeeper::service'],
   }
 
-  # keep track of all hosts in a cluster
-  zookeeper::host { $client_ip:
-    id            => $id,
-    client_ip     => $client_ip,
-    election_port => $election_port,
-    leader_port   => $leader_port,
-  }
-
   # Initialize the datastore if required
   if $initialize_datastore {
     exec { 'initialize_datastore':
