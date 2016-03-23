@@ -13,21 +13,11 @@ dataDir=<%= @datastore %>
 # Place the dataLogDir to a separate physical disc for better performance
 <% if @datalogstore -%>
 dataLogDir=<%= @datalogstore %>
-<% else -%>
-# dataLogDir=/disk2/zookeeper
 <% end -%>
-
-# the port at which the clients will connect
-clientPort=<%= @client_port %>
-clientPortAddress=<%= @client_ip %>
 
 # specify all zookeeper servers
 # The fist port is used by followers to connect to the leader
 # The second one is used for leader election
-#server.1=zookeeper1:2888:3888
-#server.2=zookeeper2:2888:3888
-#server.3=zookeeper3:2888:3888
-<% i = 1 -%>
 <% @servers.each_with_index do |h, i| -%>
 <% if @observers.include? h -%>
 <% observer_text=':observer' -%>
