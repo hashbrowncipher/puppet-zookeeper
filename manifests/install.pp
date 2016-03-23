@@ -6,9 +6,8 @@
 #
 # Actions: None
 #
-# Requires:
 #
-# Sample Usage: include zookeeper::install
+# Should not be included directly
 #
 class zookeeper::install(
   $ensure            = present,
@@ -16,29 +15,57 @@ class zookeeper::install(
   $cleanup_sh        = '/usr/lib/zookeeper/bin/zkCleanup.sh',
   $datastore         = '/var/lib/zookeeper',
   $user              = 'zookeeper',
+  $start_with        = 'init.d',
+  $ensure_cron       = true,
+  $service_package   = 'zookeeperd',
+  $packages          = ['zookeeper'],
+  $repo_source       = undef,
+  $install_java      = false,
+  $java_package      = undef
 ) {
-# a debian (or other binary package) must be available, see https://github.com/deric/zookeeper-deb-packaging
-# for Debian packaging
-  package { ['zookeeper']:
-    ensure => $ensure
-  }
+  anchor { 'zookeeper::install::begin': }
+  anchor { 'zookeeper::install::end': }
 
-  package { ['zookeeperd']: #init.d scripts for zookeeper
-    ensure  => $ensure,
-    require => Package['zookeeper']
-  }
+  case $::osfamily {
+    'Debian': {
+      class { 'zookeeper::os::debian':
+        ensure            => $ensure,
+        snap_retain_count => $snap_retain_count,
+        cleanup_sh        => $cleanup_sh,
+        datastore         => $datastore,
+        user              => $user,
+        start_with        => $start_with,
+        ensure_cron       => $ensure_cron,
+        service_package   => $service_package,
+        packages          => $packages,
+        before            => Anchor['zookeeper::install::end'],
+        require           => Anchor['zookeeper::install::begin'],
+        install_java      => $install_java,
+        java_package      => $java_package
+      }
+    }
+    'RedHat': {
 
-  # if !$cleanup_count, then ensure this cron is absent.
-  if ($snap_retain_count > 0 and $ensure != 'absent') {
-    ensure_packages(['cron'])
+      class { 'zookeeper::repo':
+        source => $repo_source,
+      }
 
-    cron { 'zookeeper-cleanup':
-        ensure  => present,
-        command => "${cleanup_sh} ${datastore} ${snap_retain_count}",
-        hour    => 2,
-        minute  => 42,
-        user    => $user,
-        require => Package['zookeeper'],
+      class { 'zookeeper::os::redhat':
+        ensure            => $ensure,
+        snap_retain_count => $snap_retain_count,
+        cleanup_sh        => $cleanup_sh,
+        datastore         => $datastore,
+        user              => $user,
+        ensure_cron       => $ensure_cron,
+        packages          => $packages,
+        require           => Anchor['zookeeper::install::begin'],
+        before            => Anchor['zookeeper::install::end'],
+        install_java      => $install_java,
+        java_package      => $java_package
+      }
+    }
+    default: {
+      fail("Module '${module_name}' is not supported on OS: '${::operatingsystem}', family: '${::osfamily}'")
     }
   }
 }

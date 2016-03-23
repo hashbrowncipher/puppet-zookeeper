@@ -1,3 +1,4 @@
-forge 'http://forge.puppetlabs.com'
+forge 'https://forgeapi.puppetlabs.com'
 
-mod 'puppetlabs/stdlib', '>=0.1.6'
+mod 'puppetlabs/stdlib', '>=2.3.3'
+mod 'richardc/datacat'

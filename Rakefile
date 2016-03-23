@@ -1,20 +1,25 @@
 require 'bundler'
 Bundler.require(:rake)
 
+require 'puppetlabs_spec_helper/rake_tasks'
 require 'puppet-lint/tasks/puppet-lint'
 require 'rspec-system/rake_task'
-require 'rubygems'
-require 'puppetlabs_spec_helper/rake_tasks'
-require 'puppet_blacksmith/rake_tasks'
+# blacksmith does not support ruby 1.8.7 anymore
+require 'puppet_blacksmith/rake_tasks' if ENV['RAKE_ENV'] != 'ci' && RUBY_VERSION.split('.')[0,3].join.to_i > 187
 
-PuppetLint.configuration.ignore_paths = ["spec/fixtures/modules/cron/manifests/*.pp"]
-PuppetLint.configuration.log_format = '%{path}:%{linenumber}:%{KIND}: %{message}'
-PuppetLint.configuration.send("disable_80chars")
+desc 'Lint metadata.json file'
+task :meta do
+  sh 'metadata-json-lint metadata.json'
+end
 
-# use librarian-puppet to manage fixtures instead of .fixtures.yml
-# offers more possibilities like explicit version management, forge downloads,...
+Rake::Task[:lint].clear
+PuppetLint::RakeTask.new :lint do |config|
+  config.ignore_paths = ["spec/**/*.pp", "vendor/**/*.pp", "pkg/**/*.pp"]
+  config.log_format = '%{path}:%{linenumber}:%{KIND}: %{message}'
+end
+
 task :librarian_spec_prep do
-  sh "librarian-puppet install --path=spec/fixtures/modules/"
+  sh 'librarian-puppet install --path=spec/fixtures/modules/'
 end
 task :spec_prep => :librarian_spec_prep
 task :default => [:spec, :lint]
