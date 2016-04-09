@@ -75,7 +75,6 @@ class zookeeper::config(
     ensure  => directory,
     owner   => $user,
     group   => $group,
-    recurse => true,
     mode    => '0644',
   }
 
@@ -84,7 +83,6 @@ class zookeeper::config(
     owner   => $user,
     group   => $group,
     mode    => '0644',
-    recurse => true,
   }
 
   file { "${cfg_dir}/myid":
