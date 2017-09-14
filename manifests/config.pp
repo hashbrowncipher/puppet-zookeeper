@@ -28,6 +28,7 @@
 class zookeeper::config(
   $id                    = '1',
   $datastore             = '/var/lib/zookeeper',
+  $datalogstore          = '/var/lib/zookeeper',
   $client_port           = 2181,
   $snap_count            = 10000,
   $log_dir               = '/var/log/zookeeper',
