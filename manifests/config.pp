@@ -86,6 +86,15 @@ class zookeeper::config(
     mode    => '0644',
   }
 
+  if $datalogstore and ($datalogstore != $datastore) {
+    file { $datalogstore:
+      ensure  => directory,
+      owner   => $user,
+      group   => $group,
+      mode    => '0644',
+    }
+  }
+
   file { "${cfg_dir}/myid":
     ensure  => file,
     content => template('zookeeper/conf/myid.erb'),
