@@ -16,7 +16,7 @@
 class zookeeper(
   $id          = '1',
   $datastore   = '/var/lib/zookeeper',
-  $datalogstore  = '/var/lib/zookeeper',
+  $datalogstore  = undef,
   $client_port = 2181,
   $log_dir     = '/var/log/zookeeper',
   $cfg_dir     = '/etc/zookeeper/conf',

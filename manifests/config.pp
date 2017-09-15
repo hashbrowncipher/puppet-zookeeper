@@ -28,7 +28,7 @@
 class zookeeper::config(
   $id                    = '1',
   $datastore             = '/var/lib/zookeeper',
-  $datalogstore          = '/var/lib/zookeeper',
+  $datalogstore          = undef,
   $client_port           = 2181,
   $snap_count            = 10000,
   $log_dir               = '/var/log/zookeeper',
@@ -86,7 +86,7 @@ class zookeeper::config(
     mode    => '0644',
   }
 
-  if $datalogstore and ($datalogstore != $datastore) {
+  if $datalogstore {
     file { $datalogstore:
       ensure  => directory,
       owner   => $user,

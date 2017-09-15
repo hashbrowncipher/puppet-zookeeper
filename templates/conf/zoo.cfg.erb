@@ -12,7 +12,7 @@ syncLimit=<%= scope.lookupvar('zookeeper::config::sync_limit') %>
 dataDir=<%= scope.lookupvar('zookeeper::config::datastore') %>
 # Place the dataLogDir to a separate physical disc for better performance
 # dataLogDir=/disk2/zookeeper
-<% if scope.lookupvar('zookeeper::config::datalogstore') != scope.lookupvar('zookeeper::config:datastore') %>
+<% if scope.lookupvar('zookeeper::config::datalogstore') %>
 dataLogDir=<%= scope.lookupvar('zookeeper::config::datalogstore') %>
 <% end%>
 # the port at which the clients will connect
