@@ -101,4 +101,14 @@ describe 'zookeeper::config' do
         '/etc/zookeeper/conf/zoo.cfg'
       ).with_content(/maxClientCnxns=#{max_conn}/) }
   end
+
+  context 'datalogstore' do
+    let(:params)  {{
+      :datalogstore => '/tmp/log'
+
+    }}
+    it { should contain_file(
+      '/etc/zookeeper/conf/zoo.cfg'
+    ).with_content(/dataLogDir=\/tmp\/log/) }
+  end
 end
