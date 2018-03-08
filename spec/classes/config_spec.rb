@@ -111,4 +111,46 @@ describe 'zookeeper::config' do
       '/etc/zookeeper/conf/zoo.cfg'
     ).with_content(/dataLogDir=\/tmp\/log/) }
   end
+
+  context 'restart zookeeper default' do
+    it { should contain_file(
+      '/etc/zookeeper/conf/myid'
+    ).that_notifies('Class[zookeeper::service]') }
+    it { should contain_file(
+      '/etc/zookeeper/conf/zoo.cfg'
+    ).that_notifies('Class[zookeeper::service]') }
+    it { should contain_file(
+      '/etc/zookeeper/conf/environment'
+    ).that_notifies('Class[zookeeper::service]') }
+    it { should contain_file(
+      '/etc/zookeeper/conf/log4j.properties'
+    ).that_notifies('Class[zookeeper::service]') }
+  end
+
+  context 'restart zookeeper false' do
+    let(:params)  {{
+      :restart_zookeeper => false
+
+    }}
+    it { should contain_file(
+      '/etc/zookeeper/conf/myid') }
+    it { should contain_file(
+      '/etc/zookeeper/conf/zoo.cfg') }
+    it { should contain_file(
+      '/etc/zookeeper/conf/environment') }
+    it { should contain_file(
+      '/etc/zookeeper/conf/log4j.properties') }
+    it { should_not contain_file(
+      '/etc/zookeeper/conf/myid'
+    ).that_notifies('Class[zookeeper::service]') }
+    it { should_not contain_file(
+      '/etc/zookeeper/conf/zoo.cfg'
+    ).that_notifies('Class[zookeeper::service]') }
+    it { should_not contain_file(
+      '/etc/zookeeper/conf/environment'
+    ).that_notifies('Class[zookeeper::service]') }
+    it { should_not contain_file(
+      '/etc/zookeeper/conf/log4j.properties'
+    ).that_notifies('Class[zookeeper::service]') }
+  end
 end
