@@ -6,6 +6,7 @@
 #   user
 #   group
 #   log_dir
+#   restart_zookeeper: enables automatic restarts of zookeeper after config changes
 #
 # Requires:
 #   N/A
@@ -44,6 +45,7 @@ class zookeeper(
   $tick_time = 2000,
   $init_limit = 10,
   $sync_limit = 5,
+  $restart_zookeeper = true,
 ) {
 
   anchor { 'zookeeper::start': }->
@@ -79,6 +81,7 @@ class zookeeper(
     init_limit              => $init_limit,
     sync_limit              => $sync_limit,
     log4j_file              => $log4j_file,
+    restart_zookeeper       => $restart_zookeeper,
   }->
   class { 'zookeeper::service':
     cfg_dir => $cfg_dir,
