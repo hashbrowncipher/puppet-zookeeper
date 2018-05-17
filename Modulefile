@@ -10,3 +10,4 @@ project_page 'https://github.com/deric/puppet-zookeeper'
 
 ## Add dependencies, if any:
 dependency 'puppetlabs/stdlib', '>= 0.1.6'
+dependency 'camptocamp/puppet-systemd'

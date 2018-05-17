@@ -1,0 +1,17 @@
+[Unit]
+Description=Zookeeper distributed coordination server
+After=network.target
+Wants=network.target
+
+[Service]
+User=zookeeper
+Group=zookeeper
+SyslogIdentifier=zookeeper
+ExecStart=/bin/bash -c 'source /etc/default/zookeeper && exec /usr/share/zookeeper/bin/zkServer.sh start-foreground'
+Restart=always
+# This is due to zookeeper exiting with 143 when SIGTERM is sent by init.
+SuccessExitStatus=143
+LimitNOFILE=120000
+
+[Install]
+WantedBy=multi-user.target

@@ -80,25 +80,25 @@ class zookeeper::config(
   }
 
   file { $log_dir:
-    ensure  => directory,
-    owner   => $user,
-    group   => $group,
-    mode    => '0644',
+    ensure => directory,
+    owner  => $user,
+    group  => $group,
+    mode   => '0644',
   }
 
   file { $datastore:
-    ensure  => directory,
-    owner   => $user,
-    group   => $group,
-    mode    => '0644',
+    ensure => directory,
+    owner  => $user,
+    group  => $group,
+    mode   => '0644',
   }
 
   if $datalogstore {
     file { $datalogstore:
-      ensure  => directory,
-      owner   => $user,
-      group   => $group,
-      mode    => '0644',
+      ensure => directory,
+      owner  => $user,
+      group  => $group,
+      mode   => '0644',
     }
   }
 
