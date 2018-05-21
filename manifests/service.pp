@@ -11,7 +11,6 @@ class zookeeper::service(
     hasrestart => true,
     enable     => true,
     require    => [
-      Package['zookeeperd'],
       File["${cfg_dir}/zoo.cfg"]
     ]
   }
