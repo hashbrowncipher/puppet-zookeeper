@@ -4,7 +4,7 @@ describe 'zookeeper::config' do
   shared_examples 'debian-install' do |os, codename|
     let(:facts) {{
       :operatingsystem => os,
-      :osfamily => 'Debian',
+      :osfamily => 'Ubuntu',
       :lsbdistcodename => codename,
     }}
 
@@ -26,6 +26,11 @@ describe 'zookeeper::config' do
       'group'   => group,
     }).with_content(myid) }
 
+    it { should contain_file(env_file).with({
+      'owner'   => user,
+      'group'   => group,
+    }).with_content(/NAME=zookeeper/) }
+
   end
 
   context 'on debian-like system' do
@@ -34,9 +39,10 @@ describe 'zookeeper::config' do
     let(:cfg_dir) { '/etc/zookeeper/conf' }
     let(:log_dir) { '/var/lib/zookeeper' }
     let(:id_file) { '/etc/zookeeper/conf/myid' }
+    let(:env_file) { '/etc/zookeeper/conf/environment' }
     let(:myid)    { /1/ }
 
-    it_behaves_like 'debian-install', 'Debian', 'wheezy'
+    it_behaves_like 'debian-install', 'Ubuntu', 'trusty'
   end
 
   context 'custom parameters' do
@@ -56,8 +62,9 @@ describe 'zookeeper::config' do
     let(:log_dir) { '/var/lib/zookeeper/log' }
     let(:id_file) { '/var/lib/zookeeper/conf/myid' }
     let(:myid)    { /2/ }
+    let(:env_file) { '/var/lib/zookeeper/conf/environment' }
 
-    it_behaves_like 'debian-install', 'Debian', 'wheezy'
+    it_behaves_like 'debian-install', 'Ubuntu', 'trusty'
   end
 
   context 'extra parameters' do
@@ -85,7 +92,7 @@ describe 'zookeeper::config' do
     it do
       should contain_file('/etc/zookeeper/conf/log4j.properties').with(
           'ensure' => 'link',
-          'target' => log4j_file,
+          'target' => '/nail/etc/zookeeper/log4j.properties',
       )
     end
   end
@@ -110,47 +117,5 @@ describe 'zookeeper::config' do
     it { should contain_file(
       '/etc/zookeeper/conf/zoo.cfg'
     ).with_content(/dataLogDir=\/tmp\/log/) }
-  end
-
-  context 'restart zookeeper default' do
-    it { should contain_file(
-      '/etc/zookeeper/conf/myid'
-    ).that_notifies('Class[zookeeper::service]') }
-    it { should contain_file(
-      '/etc/zookeeper/conf/zoo.cfg'
-    ).that_notifies('Class[zookeeper::service]') }
-    it { should contain_file(
-      '/etc/zookeeper/conf/environment'
-    ).that_notifies('Class[zookeeper::service]') }
-    it { should contain_file(
-      '/etc/zookeeper/conf/log4j.properties'
-    ).that_notifies('Class[zookeeper::service]') }
-  end
-
-  context 'restart zookeeper false' do
-    let(:params)  {{
-      :restart_zookeeper => false
-
-    }}
-    it { should contain_file(
-      '/etc/zookeeper/conf/myid') }
-    it { should contain_file(
-      '/etc/zookeeper/conf/zoo.cfg') }
-    it { should contain_file(
-      '/etc/zookeeper/conf/environment') }
-    it { should contain_file(
-      '/etc/zookeeper/conf/log4j.properties') }
-    it { should_not contain_file(
-      '/etc/zookeeper/conf/myid'
-    ).that_notifies('Class[zookeeper::service]') }
-    it { should_not contain_file(
-      '/etc/zookeeper/conf/zoo.cfg'
-    ).that_notifies('Class[zookeeper::service]') }
-    it { should_not contain_file(
-      '/etc/zookeeper/conf/environment'
-    ).that_notifies('Class[zookeeper::service]') }
-    it { should_not contain_file(
-      '/etc/zookeeper/conf/log4j.properties'
-    ).that_notifies('Class[zookeeper::service]') }
   end
 end

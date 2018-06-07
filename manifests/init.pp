@@ -81,10 +81,10 @@ class zookeeper(
     init_limit              => $init_limit,
     sync_limit              => $sync_limit,
     log4j_file              => $log4j_file,
-    restart_zookeeper       => $restart_zookeeper,
   }->
   class { 'zookeeper::service':
     cfg_dir => $cfg_dir,
+    restart_zookeeper => $restart_zookeeper,
   }
   ->
   anchor { 'zookeeper::end': }
