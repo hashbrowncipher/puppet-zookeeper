@@ -36,7 +36,7 @@ class zookeeper::install(
       ensure  => $ensure,
       require => Package['zookeeper'],
     }
- }
+  }
 
   # if !$cleanup_count, then ensure this cron is absent.
   if ($snap_retain_count > 0 and $ensure != 'absent') {
