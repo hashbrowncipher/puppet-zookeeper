@@ -2,12 +2,13 @@ require 'bundler'
 Bundler.require(:rake)
 
 require 'puppet-lint/tasks/puppet-lint'
-require 'rspec-system/rake_task'
 require 'rubygems'
 require 'puppetlabs_spec_helper/rake_tasks'
 require 'puppet_blacksmith/rake_tasks'
+require 'rake/dsl_definition'
+require 'rake/hooks'
 
-PuppetLint.configuration.ignore_paths = ["spec/fixtures/modules/cron/manifests/*.pp"]
+PuppetLint.configuration.ignore_paths = ["spec/fixtures/modules/cron/manifests/*.pp", "vendor/**/*"]
 PuppetLint.configuration.log_format = '%{path}:%{linenumber}:%{KIND}: %{message}'
 PuppetLint.configuration.send("disable_80chars")
 

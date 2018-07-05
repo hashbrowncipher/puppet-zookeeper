@@ -30,15 +30,13 @@ class zookeeper::install(
           # which we manage through service.pp and notify.
           source  => 'puppet:///modules/zookeeper/zookeeper.service',
           require => Package['zookeeper'],
-          before =>  Service['zookeeper'],
       }
   } else {
     package { ['zookeeperd']: #init.d scripts for zookeeper
       ensure  => $ensure,
       require => Package['zookeeper'],
-      before =>  Service['zookeeper'],
     }
- }
+  }
 
   # if !$cleanup_count, then ensure this cron is absent.
   if ($snap_retain_count > 0 and $ensure != 'absent') {

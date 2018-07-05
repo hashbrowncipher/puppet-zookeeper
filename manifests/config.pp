@@ -54,7 +54,6 @@ class zookeeper::config(
   $init_limit = 10,
   $sync_limit = 5,
   $log4j_file = undef,
-  $restart_zookeeper = true,
 ) {
   require zookeeper::install
 
@@ -63,12 +62,6 @@ class zookeeper::config(
     if $log4j_file == "${cfg_dir}/log4j.properties" {
         fail('log4j_file should not be same as ' + "${cfg_dir}/log4j.properties")
     }
-  }
-
-  if $restart_zookeeper {
-    $notify_services = [Class['zookeeper::service']]
-  } else {
-    $notify_services = []
   }
 
   file { $cfg_dir:
@@ -109,7 +102,6 @@ class zookeeper::config(
     group   => $group,
     mode    => '0644',
     require => File[$cfg_dir],
-    notify  => $notify_services,
   }
 
   file { "${cfg_dir}/zoo.cfg":
@@ -117,7 +109,7 @@ class zookeeper::config(
     group   => $group,
     mode    => '0644',
     content => template('zookeeper/conf/zoo.cfg.erb'),
-    notify  => $notify_services,
+    require => File[$cfg_dir],
   }
 
   file { "${cfg_dir}/environment":
@@ -125,7 +117,7 @@ class zookeeper::config(
     group   => $group,
     mode    => '0644',
     content => template('zookeeper/conf/environment.erb'),
-    notify  => $notify_services,
+    require => File[$cfg_dir],
   }
 
   if $log4j_file {
@@ -136,7 +128,6 @@ class zookeeper::config(
         mode    => '0644',
         target  => $log4j_file,
         require => File[$log4j_file],
-        notify  => $notify_services,
     }
   } else {
     file { "${cfg_dir}/log4j.properties":
@@ -144,7 +135,6 @@ class zookeeper::config(
         group   => $group,
         mode    => '0644',
         content => template('zookeeper/conf/log4j.properties.erb'),
-        notify  => $notify_services,
     }
   }
 

@@ -48,15 +48,14 @@ class zookeeper(
   $restart_zookeeper = true,
 ) {
 
-  anchor { 'zookeeper::start': }->
-  class { 'zookeeper::install':
+  anchor { 'zookeeper::start': }
+  -> class { 'zookeeper::install':
     ensure            => $ensure,
     snap_retain_count => $snap_retain_count,
     datastore         => $datastore,
     user              => $user,
     cleanup_sh        => $cleanup_sh,
-  }->
-  class { 'zookeeper::config':
+  } -> class { 'zookeeper::config':
     id                      => $id,
     datastore               => $datastore,
     datalogstore            => $datalogstore,
@@ -81,12 +80,9 @@ class zookeeper(
     init_limit              => $init_limit,
     sync_limit              => $sync_limit,
     log4j_file              => $log4j_file,
-    restart_zookeeper       => $restart_zookeeper,
-  }->
-  class { 'zookeeper::service':
-    cfg_dir => $cfg_dir,
-  }
-  ->
-  anchor { 'zookeeper::end': }
+  }-> class { 'zookeeper::service':
+    cfg_dir           => $cfg_dir,
+    restart_zookeeper => $restart_zookeeper,
+  } -> anchor { 'zookeeper::end': }
 
 }

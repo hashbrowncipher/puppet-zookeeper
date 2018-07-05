@@ -10,7 +10,6 @@ describe 'zookeeper::install' do
 
     it { should contain_package('zookeeper') }
     it { should contain_package('zookeeperd') }
-    it { should contain_package('cron') }
 
     it {
       should contain_cron('zookeeper-cleanup').with({
@@ -30,11 +29,10 @@ describe 'zookeeper::install' do
 
     let(:params) { {
       :snap_retain_count => 1,
+      :ensure => 'present',
     } }
 
-    it_behaves_like 'debian-install', 'Debian', 'squeeze'
-    it_behaves_like 'debian-install', 'Debian', 'wheezy'
-    it_behaves_like 'debian-install', 'Ubuntu', 'precise'
+    it_behaves_like 'debian-install', 'Ubuntu', 'trusty'
   end
 
   context 'without cron' do
@@ -47,7 +45,6 @@ describe 'zookeeper::install' do
 
     it { should contain_package('zookeeper') }
     it { should contain_package('zookeeperd') }
-    it { should_not contain_package('cron') }
   end
 
 
@@ -70,7 +67,6 @@ describe 'zookeeper::install' do
       'ensure'  => 'absent',
       })
     }
-    it { should_not contain_package('cron') }
   end
 
 
