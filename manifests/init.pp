@@ -49,6 +49,8 @@ class zookeeper(
   $restart_zookeeper = true,
 ) {
 
+  validate_bool($quorum_listen_on_all_ips)
+
   anchor { 'zookeeper::start': }
   -> class { 'zookeeper::install':
     ensure            => $ensure,
