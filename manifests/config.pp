@@ -50,6 +50,7 @@ class zookeeper::config(
   $rollingfile_threshold = 'ERROR',
   $tracefile_threshold   = 'TRACE',
   $max_allowed_connections = 10,
+  $quorum_listen_on_all_ips = true,
   $tick_time = 2000,
   $init_limit = 10,
   $sync_limit = 5,

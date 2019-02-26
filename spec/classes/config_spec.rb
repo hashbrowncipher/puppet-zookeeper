@@ -109,6 +109,18 @@ describe 'zookeeper::config' do
       ).with_content(/maxClientCnxns=#{max_conn}/) }
   end
 
+  context 'quorum listen on all ips' do
+    quorum_listen_on_all_ips = false
+
+    let(:params) {{
+      :quorum_listen_on_all_ips => quorum_listen_on_all_ips
+    }}
+
+    it { should contain_file(
+        '/etc/zookeeper/conf/zoo.cfg'
+      ).with_content(/quorumListenOnAllIPs=#{quorum_listen_on_all_ips}/) }
+  end
+
   context 'datalogstore' do
     let(:params)  {{
       :datalogstore => '/tmp/log'
