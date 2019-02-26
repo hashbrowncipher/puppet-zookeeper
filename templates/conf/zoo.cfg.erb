@@ -66,3 +66,7 @@ autopurge.purgeInterval=<%= scope.lookupvar('zookeeper::config::purge_interval')
 
 # Maximum allowed connections
 maxClientCnxns=<%= scope.lookupvar('zookeeper::config::max_allowed_connections') %>
+
+# Listen for connections from peers on all available IPs
+# Default is false; but, at Yelp, via Puppet the default is set to true
+quorumListenOnAllIPs=<%= scope.lookupvar('zookeeper::config::quorum_listen_on_all_ips') %>
